@@ -1,5 +1,7 @@
 import os
 import cv2
+from ultralytics import YOLO
+import numpy as np
 
 # YOLOインスタンスと出力パス、フレームを受け取って、セグメンテーションした画像を出力パスへ生成する関数
 def process_image(yolo, path2tdata, frame, num_frame):
@@ -18,7 +20,26 @@ def gen_data(path2video):
         os.makedirs(path2tdata)
 
     # 以下入力パスに存在するビデオの処理
-    # 処理を後で追加
+    cap = cv2.VideoCapture(path2video)
+    wait_secs = int(1000 / cap.get(cv2.CAP_PROP_FPS))
+    yolo = YOLO("yolov8x-seg.pt")
+
+    # 以下フレームごとの処理
+    num_frame = 0
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        process_image(yolo, path2tdata, frame, num_frame)
+
+        cv2.waitKey(wait_secs)
+        if cv2.waitKey(wait_secs) & 0xFF == ord('q'):
+            break
+        num_frame += 1
+
+    cap.release()
+    cv2.destroyAllWindows()
 
     return path2tdata
 

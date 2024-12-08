@@ -12,7 +12,7 @@ class TestVideoProcessing(unittest.TestCase):
     def setUp(self):
         # process_imageをテストするときに必要な各種変数
         self.yolo = Mock()
-        self.path2tdata = 'temp/data/images'
+        self.path2tdata = '../temp/data/images'
         self.frame = np.random.randint(0, 256, (480, 640, 3), dtype=np.uint8)
         self.num_frame = 0
 
@@ -46,6 +46,7 @@ class TestVideoProcessing(unittest.TestCase):
     # 一時的に作成したディレクトリを消去
     def tearDown(self):
         try:
+            # None
             os.rmdir("../temp/data/images")
             os.rmdir("../temp/data")
         except OSError:
