@@ -1,6 +1,10 @@
 import os
 import cv2
 
+# YOLOインスタンスと出力パス、フレームを受け取って、セグメンテーションした画像を出力パスへ生成する関数
+def process_image(yolo, path2tdata, frame, num_frame):
+    None
+
 # パスを受け取って、生成したデータをディレクトリ内に生成し、そのパスを返す関数
 def gen_data(path2video):
     # パス関連
