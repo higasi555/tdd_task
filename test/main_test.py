@@ -6,12 +6,13 @@ sys.path.append(os.pardir)
 from main import gen_data, main, process_image
 
 import numpy as np
+from ultralytics import YOLO
 
 class TestVideoProcessing(unittest.TestCase):
 
     def setUp(self):
         # process_imageをテストするときに必要な各種変数
-        self.yolo = Mock()
+        self.yolo = YOLO("yolov8x-seg.pt")
         self.path2tdata = '../temp/data/images'
         self.frame = np.random.randint(0, 256, (480, 640, 3), dtype=np.uint8)
         self.num_frame = 0
@@ -35,7 +36,7 @@ class TestVideoProcessing(unittest.TestCase):
 
     def test_process_image_basic(self):
         # 仮のトラッキング結果
-        self.yolo.track.return_value = Mock(masks=[{'xy': [(10, 10), (100, 100)]}])
+        # self.yolo.track.return_value = Mock(masks=[{'xy': [(10, 10), (100, 100)]}])
 
         # 作った関数の実行
         process_image(self.yolo, self.path2tdata, self.frame, self.num_frame)

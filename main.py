@@ -8,8 +8,28 @@ def process_image(yolo, path2tdata, frame, num_frame):
     # YOLOv8でセグメンテーション
     results = yolo.track(frame, persist=True)
 
-    # とりあえず、frameをそのままoutputしてみる
-    output = frame
+    frame_rgba = cv2.cvtColor(frame, cv2.COLOR_BGR2BGRA)
+
+    green_bg = np.full_like(frame_rgba, (0, 0, 0, 0), dtype=np.uint8)
+
+    # セグメンテーションマスクの抽出
+    current_masks = []
+    for result in results:
+        if result.masks is not None:
+            for mask_data in result.masks:
+                mask_contours = mask_data.xy[0]
+                current_masks.append(mask_contours)
+
+    # 検出されたセグメントを(0, 255, 0, 255)で塗りつぶす
+    for contour in current_masks:
+        contour_array = np.array(contour, dtype=np.int32)
+        cv2.fillPoly(green_bg, [contour_array], (0, 255, 0, 255))
+
+    # デバッグ用
+    # cv2.imshow('green_bg', green_bg)
+
+    # green_bgのうち、(0, 255, 0, 255)で塗りつぶされた部分をframe_rgba（つまり元画像）に置き換えて、出力
+    output = np.where((green_bg == [0, 255, 0, 255]).all(axis=-1, keepdims=True), frame_rgba, green_bg)
     cv2.imshow('Processed Frame', output)
     file_name = f"frame_{num_frame}.png"
     save_path = os.path.join(path2tdata, file_name)
