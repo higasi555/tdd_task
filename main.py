@@ -5,7 +5,15 @@ import numpy as np
 
 # YOLOインスタンスと出力パス、フレームを受け取って、セグメンテーションした画像を出力パスへ生成する関数
 def process_image(yolo, path2tdata, frame, num_frame):
-    None
+    # YOLOv8でセグメンテーション
+    results = yolo.track(frame, persist=True)
+
+    # とりあえず、frameをそのままoutputしてみる
+    output = frame
+    cv2.imshow('Processed Frame', output)
+    file_name = f"frame_{num_frame}.png"
+    save_path = os.path.join(path2tdata, file_name)
+    cv2.imwrite(save_path, output)
 
 # パスを受け取って、生成したデータをディレクトリ内に生成し、そのパスを返す関数
 def gen_data(path2video):
