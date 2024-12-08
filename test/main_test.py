@@ -8,14 +8,14 @@ class TestVideoProcessing(unittest.TestCase):
 
     # ディレクトリが正しく作られるかどうか
     def test_directory_creation(self):
-        test_path = "temp/test.mp4"
-        expected_directory = "temp/data/images"
+        test_path = "../temp/test.mp4"
+        expected_directory = "../temp/data/images"
 
         # 作った関数の実行
         result_path = gen_data(test_path)
 
         self.assertTrue(os.path.exists(expected_directory))
-        self.assertEqual(result_path, expected_directory)
+        self.assertEqual(os.path.normpath(result_path), os.path.normpath(expected_directory))
 
     # パスが間違ってる時、notfoundとなるかどうか
     def test_error_handling_invalid_path(self):
@@ -26,9 +26,8 @@ class TestVideoProcessing(unittest.TestCase):
     # 一時的に作成したディレクトリを消去
     def tearDown(self):
         try:
-            os.rmdir("temp/data/images")
-            os.rmdir("temp/data")
-            os.rmdir("temp")
+            os.rmdir("../temp/data/images")
+            os.rmdir("../temp/data")
         except OSError:
             pass
 

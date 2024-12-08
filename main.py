@@ -4,6 +4,10 @@ import cv2
 # パスを受け取って、生成したデータをディレクトリ内に生成し、そのパスを返す関数
 def gen_data(path2video):
     # パス関連
+    # 存在しない場合のエラーハンドル
+    if not os.path.isfile(path2video):
+        raise FileNotFoundError(f"No video file found at {path2video}")
+
     base_dir = os.path.dirname(path2video)
     path2tdata = os.path.join(base_dir, "data/images")
     if not os.path.exists(path2tdata):
